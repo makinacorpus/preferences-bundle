@@ -59,8 +59,8 @@ trait RepositoryTestTrait
             // Ensure a few type information as been correctly stored.
             $valueType = ValueValidator::getTypeOf($value);
             $loadedType = ValueValidator::getTypeOf($loaded);
-            self::assertSame($valueType->getNativeType(), $loadedType->getNativeType());
-            self::assertSame($valueType->isCollection(), $loadedType->isCollection());
+            self::assertSame($valueType->nativeType, $loadedType->nativeType);
+            self::assertSame($valueType->collection, $loadedType->collection);
         } else {
             self::assertSame($value, $repository->get($name));
         }
@@ -106,8 +106,8 @@ trait RepositoryTestTrait
         $repository->set('some.string', "a");
         $type = $repository->getType('some.string');
 
-        self::assertSame('string', $type->getNativeType());
-        self::assertFalse($type->isCollection());
+        self::assertSame('string', $type->nativeType);
+        self::assertFalse($type->collection);
     }
 
     /**
@@ -120,8 +120,8 @@ trait RepositoryTestTrait
         $repository->set('some.collection', ["a", "b"]);
         $type = $repository->getType('some.collection');
 
-        self::assertSame('string', $type->getNativeType());
-        self::assertTrue($type->isCollection());
+        self::assertSame('string', $type->nativeType);
+        self::assertTrue($type->collection);
     }
 
     /**
@@ -132,8 +132,8 @@ trait RepositoryTestTrait
     public function testGetTypeWithNull(PreferencesRepository $repository)
     {
         $type = $repository->getType(\uniqid('non.existing.'));
-        self::assertSame('string', $type->getNativeType());
-        self::assertFalse($type->isCollection());
+        self::assertSame('string', $type->nativeType);
+        self::assertFalse($type->collection);
     }
 
     /**
@@ -146,14 +146,14 @@ trait RepositoryTestTrait
         $repository->set('some.string', "a");
 
         $type = $repository->getType('some.string');
-        self::assertSame('string', $type->getNativeType());
-        self::assertFalse($type->isCollection());
+        self::assertSame('string', $type->nativeType);
+        self::assertFalse($type->collection);
 
         $repository->set('some.string', [true, false]);
 
         $type = $repository->getType('some.string');
-        self::assertSame('bool', $type->getNativeType());
-        self::assertTrue($type->isCollection());
+        self::assertSame('bool', $type->nativeType);
+        self::assertTrue($type->collection);
     }
 
     /**

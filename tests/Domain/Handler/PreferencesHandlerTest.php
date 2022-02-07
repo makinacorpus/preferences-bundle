@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace MakinaCorpus\Preferences\Tests\Domain\Handler;
 
 use MakinaCorpus\Preferences\PreferencesRepository;
-use MakinaCorpus\Preferences\Domain\Handler\PreferencesHandler;
-use MakinaCorpus\Preferences\Domain\Message\PreferenceValueDelete;
-use MakinaCorpus\Preferences\Domain\Message\PreferenceValueSet;
-use MakinaCorpus\Preferences\Domain\Message\PreferenceValueSetMany;
+use MakinaCorpus\Preferences\Handler\PreferencesHandler;
+use MakinaCorpus\Preferences\Message\PreferenceValueDelete;
+use MakinaCorpus\Preferences\Message\PreferenceValueSet;
+use MakinaCorpus\Preferences\Message\PreferenceValueSetMany;
 use MakinaCorpus\Preferences\Repository\ArrayPreferencesRepository;
 use MakinaCorpus\Preferences\Schema\ArrayPreferencesSchema;
 use PHPUnit\Framework\TestCase;

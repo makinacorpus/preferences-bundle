@@ -56,12 +56,12 @@ final class PreferenceValueType extends AbstractType
         }
 
         $schema = $this->schema->getType($name);
-        $default = $schema->getDefault();
+        $default = $schema->default;
         $current = $this->repository->get($name) ?? $default;
 
         $options = $this->buildSingleValueTypeOptions($schema, $options, $current);
 
-        if ($schema->isCollection()) {
+        if ($schema->collection()) {
             throw new \InvalidArgumentException("collection value are not supported yet");
         } else {
             $builder->add('value', $options['entry_type'], $options['entry_options'] + [
@@ -100,7 +100,7 @@ final class PreferenceValueType extends AbstractType
         $defaultEntryOptions = ($options['entry_options'] ?? []) + [
             'attr' => ['novalidate' => 'novalidate', 'maxlength' => '500'],
             'data' => $default,
-            'label' => $schema->getDescription(),
+            'label' => $schema->description,
             'required' => false,
         ];
 
@@ -111,7 +111,7 @@ final class PreferenceValueType extends AbstractType
             ];
         }
 
-        switch ($schema->getNativeType()) {
+        switch ($schema->nativeType) {
 
             case 'bool':
                 return [
@@ -142,7 +142,7 @@ final class PreferenceValueType extends AbstractType
                 ];
 
             default:
-                throw new \InvalidArgumentException(\sprintf("type '%s' is not supported yet", $schema->getNativeType()));
+                throw new \InvalidArgumentException(\sprintf("type '%s' is not supported yet", $schema->nativeType));
         }
     }
 
@@ -163,7 +163,7 @@ final class PreferenceValueType extends AbstractType
                     return null;
                 }
                 // This can return null.
-                return $this->schema->getType($name)->getLabel();
+                return $this->schema->getType($name)->label;
             },
             'required' => false,
             'name' => null,

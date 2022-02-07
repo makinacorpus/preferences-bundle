@@ -7,32 +7,35 @@ namespace MakinaCorpus\Preferences;
 /**
  * Necessary information for validating an incomming value.
  */
-interface ValueType
+class ValueType
 {
-    /**
-     * Get PHP native type for value.
-     */
-    public function getNativeType(): string;
+    /** PHP native type. */
+    public /* readonly */ string $nativeType;
 
-    /**
-     * Is this value an enum.
-     */
-    public function isEnum(): bool;
+    /** Should this value restricted to given allowed values. */
+    public /* readonly */ bool $enum = false;
 
-    /**
-     * Get allowed values, if enum.
-     *
-     * @return string[]
-     */
-    public function getAllowedValues(): array;
+    /** Array of allowed values if enum. */
+    public /* readonly */ array $allowedValues = [];
 
-    /**
-     * Is this type a collection.
-     */
-    public function isCollection(): bool;
+    /** Is this a collection of values. */
+    public /* readonly */ bool $collection = false;
 
-    /**
-     * Is this collection indexed with strings.
-     */
-    public function isHashMap(): bool;
+    /** If this is a collection, does it allows named keys. */
+    public /* readonly */ bool $hashMap = false;
+
+    public function __construct(string $nativeType, bool $collection = false, ?array $allowedValues = null, bool $hashMap = false)
+    {
+        $this->nativeType = $nativeType;
+        $this->collection = $collection;
+
+        if ($allowedValues) {
+            // It can only be an enum if it has allowed values.
+            $this->allowedValues = $allowedValues;
+            $this->enum = true;
+        } else if ($collection) {
+            // It cannot be a hashmap if there's allowed values.
+            $this->hashMap = $hashMap;
+        }
+    }
 }

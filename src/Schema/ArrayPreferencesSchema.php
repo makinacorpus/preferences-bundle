@@ -6,7 +6,6 @@ namespace MakinaCorpus\Preferences\Schema;
 
 use MakinaCorpus\Preferences\PreferencesSchema;
 use MakinaCorpus\Preferences\ValueSchema;
-use MakinaCorpus\Preferences\Value\DefaultValueSchema;
 
 /**
  * Array based schema, suitable for small applications
@@ -21,7 +20,7 @@ final class ArrayPreferencesSchema implements PreferencesSchema
      *
      * @param array $data
      *   Keys must be preference value names, values must be arrays that must be
-     *   compatible with DefaultValueSchema::fromArray() static constructor.
+     *   compatible with ValueSchema::fromArray() static constructor.
      *   Only 'name' can and should be be ommited here.
      */
     public function __construct(array $data)
@@ -44,7 +43,7 @@ final class ArrayPreferencesSchema implements PreferencesSchema
     {
         $data = $this->data[$name] ?? $this->undefinedValueSchema($name);
 
-        return DefaultValueSchema::fromArray(['name' => $name] + $data);
+        return ValueSchema::fromArray(['name' => $name] + $data);
     }
 
     /**

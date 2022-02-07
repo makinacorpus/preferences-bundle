@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace MakinaCorpus\Preferences\Domain\Handler;
+namespace MakinaCorpus\Preferences\Handler;
 
 use MakinaCorpus\Preferences\PreferencesRepository;
 use MakinaCorpus\Preferences\PreferencesSchema;
-use MakinaCorpus\Preferences\Domain\Message\PreferenceValueDelete;
-use MakinaCorpus\Preferences\Domain\Message\PreferenceValueSet;
-use MakinaCorpus\Preferences\Domain\Message\PreferenceValueSetMany;
+use MakinaCorpus\Preferences\Message\PreferenceValueDelete;
+use MakinaCorpus\Preferences\Message\PreferenceValueSet;
+use MakinaCorpus\Preferences\Message\PreferenceValueSetMany;
 use MakinaCorpus\Preferences\Value\ValueValidator;
 
 /**
@@ -53,7 +53,7 @@ final class PreferencesHandler
      */
     public function doSet(PreferenceValueSet $command): void
     {
-        ($this->handleValue($command->getName(), $command->getValue()))();
+        ($this->handleValue($command->name, $command->value))();
     }
 
     /**
@@ -65,7 +65,7 @@ final class PreferencesHandler
 
         // Pre-validate everything, to ensure we won't store anything if any
         // value fails validation.
-        foreach ($command->getValueList() as $name => $value) {
+        foreach ($command->values as $name => $value) {
             $callables[] = $this->handleValue($name, $value);
         }
 
@@ -80,6 +80,6 @@ final class PreferencesHandler
      */
     public function doDelete(PreferenceValueDelete $command): void
     {
-        $this->repository->delete($command->getName());
+        $this->repository->delete($command->name);
     }
 }

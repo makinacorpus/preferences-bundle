@@ -51,14 +51,14 @@ final class ValueValidator
             throw new \InvalidArgumentException("Value cannot be a closure/function/generator");
         }
 
-        if ($type->isEnum() && ($allowed = $type->getAllowedValues())) {
+        if ($type->enum && ($allowed = $type->allowedValues)) {
             if (!\in_array($value, $allowed)) {
                 throw new \InvalidArgumentException(\sprintf("Value is not one of '%s'", \implode("', '", $allowed)));
             }
             return $value; // No need to check further if we found the value.
         }
 
-        if (($expected = $type->getNativeType()) !== ($valueType = self::guessTypeOf($value))) {
+        if (($expected = $type->nativeType) !== ($valueType = self::guessTypeOf($value))) {
             throw new \InvalidArgumentException(\sprintf("Value type mismatch, expected: '%s', got: '%s'", $expected, $valueType));
         }
         return $value;
@@ -70,16 +70,16 @@ final class ValueValidator
     public static function getTypeOf($value): ValueType
     {
         if (null === $value) {
-            return new DefaultValueType('string');
+            return new ValueType('string');
         }
         if (\is_array($value)) {
             if ($value) {
                 $first = \reset($value);
-                return new DefaultValueType(self::guessTypeOf($first), true);
+                return new ValueType(self::guessTypeOf($first), true);
             }
-            return new DefaultValueType('string', true);
+            return new ValueType('string', true);
         }
-        return new DefaultValueType(self::guessTypeOf($value), \is_array($value));
+        return new ValueType(self::guessTypeOf($value), \is_array($value));
     }
 
     /**
@@ -91,7 +91,7 @@ final class ValueValidator
         // (array) cast. Ideally it should be iterables but for the
         // sake of simplicity and because \array_map() only deals with
         // arrays, we choose arrays.
-        if ($type->isCollection()) {
+        if ($type->collection) {
             return \array_map(
                 fn ($value) => self::validateSingle($type, $value),
                 (array)$value

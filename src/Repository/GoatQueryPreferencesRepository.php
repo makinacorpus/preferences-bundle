@@ -8,7 +8,6 @@ use Goat\Query\QueryBuilder;
 use Goat\Runner\Runner;
 use MakinaCorpus\Preferences\PreferencesRepository;
 use MakinaCorpus\Preferences\ValueType;
-use MakinaCorpus\Preferences\Value\DefaultValueType;
 use MakinaCorpus\Preferences\Value\ValueValidator;
 
 /**
@@ -106,10 +105,10 @@ final class GoatQueryPreferencesRepository implements PreferencesRepository
             ->where('name', $name)
             ->execute()
             ->setHydrator(function (array $row) {
-                return new DefaultValueType($row['type'], $row['is_collection'], null, $row['is_hashmap']);
+                return new ValueType($row['type'], $row['is_collection'], null, $row['is_hashmap']);
             })
             ->fetch()
-        ) ?? new DefaultValueType('string');
+        ) ?? new ValueType('string');
     }
 
     /**
@@ -144,10 +143,10 @@ final class GoatQueryPreferencesRepository implements PreferencesRepository
                 $builder
                     ->update($this->tableName)
                     ->sets([
-                        'is_collection' => $type->isCollection(),
-                        'is_hashmap' => $type->isHashMap(),
+                        'is_collection' => $type->collection,
+                        'is_hashmap' => $type->hashMap,
                         'is_serialized' => $serialized,
-                        'type' => $type->getNativeType(),
+                        'type' => $type->nativeType,
                         'updated_at' => $now,
                         'value' => $value,
                     ])
@@ -159,11 +158,11 @@ final class GoatQueryPreferencesRepository implements PreferencesRepository
                     ->insert($this->tableName)
                     ->values([
                         'created_at' => $now,
-                        'is_collection' => $type->isCollection(),
-                        'is_hashmap' => $type->isHashMap(),
+                        'is_collection' => $type->collection,
+                        'is_hashmap' => $type->hashMap,
                         'is_serialized' => $serialized,
                         'name' => $name,
-                        'type' => $type->getNativeType(),
+                        'type' => $type->nativeType,
                         'updated_at' => $now,
                         'value' => $value,
                     ])

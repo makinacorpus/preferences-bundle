@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MakinaCorpus\Preferences\Tests\Value;
 
 use MakinaCorpus\Preferences\ValueType;
-use MakinaCorpus\Preferences\Value\DefaultValueType;
 use MakinaCorpus\Preferences\Value\ValueValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -18,10 +17,10 @@ final class ValueValidatorTest extends TestCase
     {
         $type = ValueValidator::getTypeOf(new \DateTime());
 
-        self::assertSame(\DateTime::class, $type->getNativeType());
-        self::assertFalse($type->isCollection());
-        self::assertFalse($type->isEnum());
-        self::assertFalse($type->isHashMap());
+        self::assertSame(\DateTime::class, $type->nativeType);
+        self::assertFalse($type->collection);
+        self::assertFalse($type->enum);
+        self::assertFalse($type->hashMap);
     }
 
     /**
@@ -31,8 +30,8 @@ final class ValueValidatorTest extends TestCase
     {
         $type = ValueValidator::getTypeOf(null);
 
-        self::assertSame('string', $type->getNativeType());
-        self::assertFalse($type->isCollection());
+        self::assertSame('string', $type->nativeType);
+        self::assertFalse($type->collection);
     }
 
     /**
@@ -42,8 +41,8 @@ final class ValueValidatorTest extends TestCase
     {
         $type = ValueValidator::getTypeOf([true, false, true, false]);
 
-        self::assertSame('bool', $type->getNativeType());
-        self::assertTrue($type->isCollection());
+        self::assertSame('bool', $type->nativeType);
+        self::assertTrue($type->collection);
     }
 
     /**
@@ -53,8 +52,8 @@ final class ValueValidatorTest extends TestCase
     {
         $type = ValueValidator::getTypeOf([]);
 
-        self::assertSame('string', $type->getNativeType());
-        self::assertTrue($type->isCollection());
+        self::assertSame('string', $type->nativeType);
+        self::assertTrue($type->collection);
     }
 
     /**
@@ -62,7 +61,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateSingleValueAsCollection()
     {
-        $type = new DefaultValueType('string', true);
+        $type = new ValueType('string', true);
         $value = "foo";
 
         $this->assertSame(["foo"], ValueValidator::validate($type, $value));
@@ -73,7 +72,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateCollectionWithOneError()
     {
-        $type = new DefaultValueType('int', true);
+        $type = new ValueType('int', true);
         $value = [1, 2, "3", 4];
 
         $this->expectException(\InvalidArgumentException::class);
@@ -85,7 +84,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateCollection()
     {
-        $type = new DefaultValueType('int', true);
+        $type = new ValueType('int', true);
         $value = [1, 2, 3, 4];
 
         $this->assertSame($value, ValueValidator::validate($type, $value));
@@ -96,7 +95,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateEnum()
     {
-        $type = new DefaultValueType('string', false, ['foo', 'bar']);
+        $type = new ValueType('string', false, ['foo', 'bar']);
         $value = 'foo';
 
         $this->assertSame('foo', ValueValidator::validate($type, $value));
@@ -107,7 +106,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateEnumCollection()
     {
-        $type = new DefaultValueType('string', true, ['foo', 'bar']);
+        $type = new ValueType('string', true, ['foo', 'bar']);
         $value = ['bar', 'foo'];
 
         $this->assertSame(['bar', 'foo'], ValueValidator::validate($type, $value));
@@ -118,7 +117,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateEnumWithError()
     {
-        $type = new DefaultValueType('string', false, ['foo', 'bar']);
+        $type = new ValueType('string', false, ['foo', 'bar']);
         $value = 'baz';
 
         $this->expectException(\InvalidArgumentException::class);
@@ -130,7 +129,7 @@ final class ValueValidatorTest extends TestCase
      */
     public function testValidateEnumCollectionWithError()
     {
-        $type = new DefaultValueType('string', true, ['foo', 'bar']);
+        $type = new ValueType('string', true, ['foo', 'bar']);
         $value = ['foo', 'baz'];
 
         $this->expectException(\InvalidArgumentException::class);
@@ -143,7 +142,7 @@ final class ValueValidatorTest extends TestCase
     public static function dataValidateObject()
     {
         return [
-            [new DefaultValueType(\ArrayObject::class), new \ArrayObject()]
+            [new ValueType(\ArrayObject::class), new \ArrayObject()]
         ];
     }
 
@@ -161,7 +160,7 @@ final class ValueValidatorTest extends TestCase
     public static function dataValidateObjectWithError()
     {
         return [
-            [new DefaultValueType(\Exception::class), new \ArrayObject()]
+            [new ValueType(\Exception::class), new \ArrayObject()]
         ];
     }
 
@@ -180,10 +179,10 @@ final class ValueValidatorTest extends TestCase
     public static function dataValidate()
     {
         return [
-            [new DefaultValueType('int'), 12],
-            [new DefaultValueType('float'), 12.3],
-            [new DefaultValueType('bool'), true],
-            [new DefaultValueType('string'), "test"],
+            [new ValueType('int'), 12],
+            [new ValueType('float'), 12.3],
+            [new ValueType('bool'), true],
+            [new ValueType('string'), "test"],
         ];
     }
 
@@ -201,9 +200,9 @@ final class ValueValidatorTest extends TestCase
     public static function dataValidateWithError()
     {
         return [
-            [new DefaultValueType('int'), "12"],
-            [new DefaultValueType('bool'), 1],
-            [new DefaultValueType('string'), false],
+            [new ValueType('int'), "12"],
+            [new ValueType('bool'), 1],
+            [new ValueType('string'), false],
         ];
     }
 
@@ -222,7 +221,7 @@ final class ValueValidatorTest extends TestCase
     public function testValidateWithCallbackRaiseError()
     {
         $this->expectException(\InvalidArgumentException::class);
-        ValueValidator::validate(new DefaultValueType('null'), function () {});
+        ValueValidator::validate(new ValueType('null'), function () {});
     }
 
     /**
@@ -231,6 +230,6 @@ final class ValueValidatorTest extends TestCase
     public function testValidateWithResourceRaiseError()
     {
         $this->expectException(\InvalidArgumentException::class);
-        ValueValidator::validate(new DefaultValueType('null'), \fopen(__FILE__, 'r'));
+        ValueValidator::validate(new ValueType('null'), \fopen(__FILE__, 'r'));
     }
 }

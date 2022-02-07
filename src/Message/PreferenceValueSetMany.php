@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MakinaCorpus\Preferences\Domain\Message;
+namespace MakinaCorpus\Preferences\Message;
 
 /**
  * Set many configuration value
@@ -16,8 +16,8 @@ namespace MakinaCorpus\Preferences\Domain\Message;
  */
 final class PreferenceValueSetMany
 {
-    /** @var mixed[] */
-    private array $values;
+    /** @var array<string,mixed> */
+    public /* readonly */ array $values;
 
     /**
      * @param array $values
@@ -26,10 +26,5 @@ final class PreferenceValueSetMany
     public function __construct(array $values)
     {
         $this->values = $values;
-    }
-
-    public function getValueList(): array
-    {
-        return $this->values;
     }
 }
