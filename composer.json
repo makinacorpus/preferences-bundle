@@ -1,0 +1,58 @@
+{
+    "name" : "makinacorpus/preferences-bundle",
+    "type": "symfony-bundle",
+    "description": "Preferences are configuration variables that are user-managed for which we cannot rely upon container parameters or environment variables.",
+    "keywords": ["symfony", "preferences", "configuration"],
+    "homepage": "http://github.com/makinacorpus/preferences-bundle",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name" : "Pierre RINEAU",
+            "email" : "pierre.rineau@processus.org"
+        },
+        {
+            "name" : "Régis LEROY",
+            "email" : "regis.leroy@makina-corpus.com",
+            "role": "Developer"
+        },
+        {
+            "name" : "Simon MELLERIN",
+            "email" : "simon.mellerin@makina-corpus.com",
+            "role": "Developer"
+        },
+        {
+            "name" : "Makina Corpus",
+            "homepage" : "https://www.makina-corpus.com"
+        }
+    ],
+    "minimum-stability" : "dev",
+    "prefer-stable" : true,
+    "autoload" : {
+        "psr-4" : {
+            "MakinaCorpus\\Preferences\\" : "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MakinaCorpus\\Preferences\\Tests\\": "tests"
+        }
+    },
+    "require" : {
+        "makinacorpus/goat-query": "^3.0 || ^4.0",
+        "php" : ">=8.0"
+    },
+    "require-dev" : {
+        "makinacorpus/goat-query-bundle": "^3.0",
+        "ramsey/uuid": "^3.8 || ^4.0",
+        "symfony/config": "^5.4 || ^6.0",
+        "symfony/console": "^5.4 || ^6.0",
+        "symfony/dependency-injection": "^5.4 || ^6.0",
+        "symfony/http-kernel": "^5.4 || ^6.0",
+        "symfony/yaml": "^5.4 || ^6.0",
+        "symfony/form": "^5.4 || ^6.0",
+        "phpunit/phpunit": "^9"
+    },
+    "suggest" : {
+        "symfony/form": "For preferences form widget usage"
+    }
+}

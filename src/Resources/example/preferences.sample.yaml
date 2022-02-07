@@ -1,0 +1,40 @@
+#
+# Preferences example configuration.
+#
+# This file explicits all existing configuration parameters, all values
+# documented within this file are set to defaults, except for normalization
+# and preferences example values.
+#
+preferences:
+    #
+    # Define a schema.
+    #
+    # If you remove this, all repositories will work in YOLO mode, meaning
+    # nothing will ever be validated not even value types, you may then use
+    # this API for arbitrary value storage.
+    #
+    # In the opposite, by defining a schema, you enable type and allowed
+    # values validation for what is going to be stored, and also enable
+    # the PreferenceSchema component in your container, allowing you to
+    # dynamically build forms.
+    #
+    schema:
+        #
+        # Complete variable definition example.
+        #
+        app_domain_some_variable:
+            label: Some variable
+            description: Uncheck this value to deactive this feature
+            #
+            # Here, default supported values are: "string", "bool", "int"
+            # and "float", defaulting to "string" if unspecified.
+            #
+            type: bool
+            collection: false
+            default: true
+
+        #
+        # Incomplete (using defaults) variable definition example.
+        #
+        app_other_variable:
+            # ... all values here are optional
