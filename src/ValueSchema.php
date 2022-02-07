@@ -65,9 +65,9 @@ class ValueSchema extends ValueType
             $data['allowed_values'] ?? null,
             (bool)($data['hashmap'] ?? false),
             $data['name'] ?? null,
-            $data['default'] ?? null,
             $data['label'] ?? null,
-            $data['description'] ?? null
+            $data['description'] ?? null,
+            $data['default'] ?? null
         );
     }
 }

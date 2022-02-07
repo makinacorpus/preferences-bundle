@@ -23,8 +23,12 @@ final class PreferencesExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config'));
-
         $loader->load('preferences.yaml');
+
+        $bundles = $container->getParameter('kernel.bundles');
+        if (\in_array('MakinaCorpus\\CoreBus\\Bridge\\Symfony\\CoreBusBundle', $bundles)) {
+            $loader->load('handler.corebus.yaml');
+        }
 
         if (isset($config['schema'])) {
             $schemaDefinition = new Definition();

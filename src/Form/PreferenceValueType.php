@@ -61,7 +61,7 @@ final class PreferenceValueType extends AbstractType
 
         $options = $this->buildSingleValueTypeOptions($schema, $options, $current);
 
-        if ($schema->collection()) {
+        if ($schema->collection) {
             throw new \InvalidArgumentException("collection value are not supported yet");
         } else {
             $builder->add('value', $options['entry_type'], $options['entry_options'] + [

@@ -14,7 +14,7 @@ services:
 
     preferences:
         public: true
-        class: MakinaCorpus\Preferences\Domain\Repository\DefaultPreferences
+        class: MakinaCorpus\Preferences\DefaultPreferences
         arguments: ["@preferences.repository", "@?preferences.schema"]
 
     MakinaCorpus\Preferences\Preferences:
@@ -34,14 +34,3 @@ services:
         class: MakinaCorpus\Preferences\DependencyInjection\PreferencesEnvVarProcessor
         arguments: ["@preferences"]
         tags: ["container.env_var_processor"]
-
-    # Remove this and make different implementations for different buses:
-    #  - messanger
-    #  - corebus
-    #  - goat
-    preferences.handler:
-        public: false
-        class: MakinaCorpus\Preferences\Domain\Handler\PreferencesHandler
-        arguments: ['@preferences.repository', '@?preferences.schema']
-        # Those tags will help.
-        tags: ['goat.message_handler', 'app.handler']

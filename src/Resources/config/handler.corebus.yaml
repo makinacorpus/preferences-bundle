@@ -1,0 +1,11 @@
+services:
+    preferences.handler.corebus:
+        public: true
+        class: MakinaCorpus\Preferences\Handler\CoreBusPreferencesHandler
+        arguments: ['@preferences.repository', '@?preferences.schema']
+        tags: ['app.handler']
+
+    # Otherwise command handler locator will not find it.
+    MakinaCorpus\Preferences\Handler\CoreBusPreferencesHandler:
+        public: true
+        alias: preferences.handler.corebus

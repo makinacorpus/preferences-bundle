@@ -16,7 +16,7 @@ use MakinaCorpus\Preferences\Value\ValueValidator;
  *
  * This is meant to be plugged over a bus, one way or another.
  */
-final class PreferencesHandler
+class PreferencesHandler
 {
     private PreferencesRepository $repository;
     private ?PreferencesSchema $schema = null;
