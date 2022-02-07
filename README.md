@@ -28,16 +28,23 @@ This bundle provides a simple API for:
 
 This package is depends on `makinacorpus/goat-query`.
 
-Once you installed it, set this in the `config/packages/preferences.yaml` file:
+Simply install this package:
 
-```yaml
-goat:
-    preferences:
-        enabled: true
+```sh
+composer require makinacorpus/preferences-bundle
 ```
 
-If you stop there, there will no schema, meaning that the repository will work
-in YOLO mode: it will accept any value type for any configuration key.
+Then add the bundle into your `config/bundles.php` file:
+
+```php
+<?php
+
+return [
+    // ... Your other bundles.
+    MakinaCorpus\Preferences\PreferencesBundle::class => ['all' => true],
+];
+
+```
 
 ## Define a custom schema
 
