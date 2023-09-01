@@ -11,20 +11,55 @@ use MakinaCorpus\Preferences\Value\ValueValidator;
 /**
  * SQL based implementation
  */
-final class ArrayPreferencesRepository implements PreferencesRepository
+class ArrayPreferencesRepository implements PreferencesRepository
 {
+    private mixed $initializer = null;
     /** @var mixed[] */
-    private array $data = [];
+    private ?array $data = null;
+
+    public function __construct(null|array|callable $data = null)
+    {
+        if (\is_callable($data)) {
+            $this->initializer = $data;
+        } else {
+            $this->data = $data ?? [];
+        }
+    }
+
+    private function initialize()
+    {
+        if (null === $this->data && $this->initializer) {
+            $data = ($this->initializer)();
+            $this->initializer = null;
+
+            if (empty($data)) {
+                $this->data = [];
+            } else if (\is_array($data)) {
+                $this->data = $data;
+            } else if (\is_iterable($data)) {
+                $this->data = \iterator_to_array($data);
+            } else {
+                throw new \InvalidArgumentException("Initializer did not return an iterable or an array.");
+            }
+        }
+    }
 
     /**
-     * Default constructor
-     *
-     * @codeCoverageIgnore
-     *   Because it is called within a data provider.
+     * {@inheritdoc}
      */
-    public function __construct(?array $data = null)
+    public function list(): iterable
     {
-        $this->data = $data ?? [];
+        $this->initialize();
+
+        return \array_keys($this->data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all(): iterable
+    {
+        return $this->data;
     }
 
     /**
@@ -32,6 +67,8 @@ final class ArrayPreferencesRepository implements PreferencesRepository
      */
     public function has(string $name): bool
     {
+        $this->initialize();
+
         return isset($this->data[$name]);
     }
 
@@ -40,6 +77,8 @@ final class ArrayPreferencesRepository implements PreferencesRepository
      */
     public function get(string $name)
     {
+        $this->initialize();
+
         return $this->data[$name] ?? null;
     }
 
@@ -48,6 +87,8 @@ final class ArrayPreferencesRepository implements PreferencesRepository
      */
     public function getMultiple(array $names): array
     {
+        $this->initialize();
+
         return \array_intersect_key($this->data, \array_flip($names));
     }
 
@@ -56,6 +97,8 @@ final class ArrayPreferencesRepository implements PreferencesRepository
      */
     public function getType(string $name): ValueType
     {
+        $this->initialize();
+
         return ValueValidator::getTypeOf($this->get($name));
     }
 
@@ -64,6 +107,8 @@ final class ArrayPreferencesRepository implements PreferencesRepository
      */
     public function set(string $name, $value, ?ValueType $type = null): void
     {
+        $this->initialize();
+
         $this->data[$name] = $value;
     }
 
@@ -72,6 +117,8 @@ final class ArrayPreferencesRepository implements PreferencesRepository
      */
     public function delete(string $name): void
     {
+        $this->initialize();
+
         unset($this->data[$name]);
     }
 }

@@ -7,7 +7,7 @@ namespace MakinaCorpus\Preferences\Tests\Repository;
 use MakinaCorpus\Preferences\Repository\ArrayPreferencesRepository;
 use PHPUnit\Framework\TestCase;
 
-final class ArrayRepositoryTest extends TestCase
+final class ArrayPreferencesRepositoryTest extends TestCase
 {
     use RepositoryTestTrait;
 

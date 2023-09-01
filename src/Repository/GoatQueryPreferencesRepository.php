@@ -13,7 +13,7 @@ use MakinaCorpus\Preferences\Value\ValueValidator;
 /**
  * SQL based implementation
  */
-final class GoatQueryPreferencesRepository implements PreferencesRepository
+class GoatQueryPreferencesRepository implements PreferencesRepository
 {
     const TABLE_NAME_DEFAULT = 'preferences';
 
@@ -30,6 +30,44 @@ final class GoatQueryPreferencesRepository implements PreferencesRepository
     {
         $this->runner = $runner;
         $this->tableName = $tableName ?? self::TABLE_NAME_DEFAULT;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function list(): iterable
+    {
+        return $this
+            ->runner
+            ->getQueryBuilder()
+            ->select($this->tableName)
+            ->columns(['name'])
+            ->execute()
+            ->setHydrator(fn (array $row) => $row['name'])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all(): iterable
+    {
+        return \iterator_to_array(
+            $this
+                ->runner
+                ->getQueryBuilder()
+                ->select($this->tableName)
+                ->columns(['value', 'is_serialized', 'name'])
+                ->execute()
+                ->setKeyColumn('name')
+                ->setHydrator(static function (array $row) {
+                    if ($row['is_serialized']) {
+                        return \unserialize($row['value']);
+                    }
+                    return $row['value'];
+                })
+            )
+        ;
     }
 
     /**

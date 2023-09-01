@@ -15,6 +15,27 @@ namespace MakinaCorpus\Preferences;
 interface PreferencesRepository extends Preferences
 {
     /**
+     * List all known stored names.
+     *
+     * @return iterable
+     *   Can be anything iterable, it is recommened if your storage backend
+     *   permits it using a generator that streams data instead of loading
+     *   everything into memory.
+     */
+    public function list(): iterable;
+
+    /**
+     * Get all at once.
+     *
+     * @return iterable<string, mixed>
+     *   Keys are value names, values are values of course.
+     *   Can be anything iterable, since this method will be probably used
+     *   to build a all in cache blob entry, you should probably return an
+     *   already well formed array.
+     */
+    public function all(): iterable;
+
+    /**
      * Does it has a value for
      */
     public function has(string $name): bool;
