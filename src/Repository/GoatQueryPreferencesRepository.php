@@ -52,22 +52,19 @@ class GoatQueryPreferencesRepository implements PreferencesRepository
      */
     public function all(): iterable
     {
-        return \iterator_to_array(
-            $this
-                ->runner
-                ->getQueryBuilder()
-                ->select($this->tableName)
-                ->columns(['value', 'is_serialized', 'name'])
-                ->execute()
-                ->setKeyColumn('name')
-                ->setHydrator(static function (array $row) {
-                    if ($row['is_serialized']) {
-                        return \unserialize($row['value']);
-                    }
-                    return $row['value'];
-                })
-            )
+        $result = $this
+            ->runner
+            ->getQueryBuilder()
+            ->select($this->tableName)
+            ->columns(['value', 'is_serialized', 'name'])
+            ->execute()
         ;
+
+        $ret = [];
+        foreach ($result as $row) {
+            $ret[$row['name']] = $row['is_serialized'] ? \unserialize($row['value']) : $row['value'];
+        }
+        return $ret;
     }
 
     /**
